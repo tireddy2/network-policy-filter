@@ -68,7 +68,7 @@ Table of Contents
    6.  Security Considerations . . . . . . . . . . . . . . . . . . .   7
    7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   7
    8.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   7
-   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   7
+   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   8
      9.1.  Normative References  . . . . . . . . . . . . . . . . . .   8
      9.2.  Informative References  . . . . . . . . . . . . . . . . .   8
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  10
@@ -234,9 +234,10 @@ Internet-Draft      Network policy to use DNS server         August 2021
    extended error code "Blocked" defined in [RFC8914] cannot be returned
    to the client to provide additional information about the cause for
    the block.  Further, the ErrorNetworkDNSOnly key is useful when the
-   network security service fails to block access to the DNS server and
-   but sucessfully filters traffic from the endpoint to IP addresses not
-   conveyed to the endpoint as part of DNS resolution.
+   network security service fails to block access to the DNS server not
+   provided by the network but sucessfully filters traffic from the
+   endpoint to IP addresses not conveyed to the endpoint as part of DNS
+   resolution.
 
    The NetworkDNSOnly set to True is an internal security policy
    expression by the operator of the network but is not a policy
@@ -272,8 +273,7 @@ Internet-Draft      Network policy to use DNS server         August 2021
    configuration may be manual or rely upon whatever deployed device
    management tool in an enterprise network.  For example, customizing
    Firefox using Group Policy to use the Enterprise DoH server is
-   discussed in [Firefox-Policy] for Windows and MacOS, and setting
-   Chrome policies is discussed in [Chrome-Policy] and [Chrome-DoH].
+
 
 
 
@@ -281,6 +281,9 @@ Reddy, et al.             Expires March 3, 2022                 [Page 5]
 
 Internet-Draft      Network policy to use DNS server         August 2021
 
+
+   discussed in [Firefox-Policy] for Windows and MacOS, and setting
+   Chrome policies is discussed in [Chrome-Policy] and [Chrome-DoH].
 
    If mobile device management (MDM) (e.g., [MDM-Apple]) secures a
    device, MDM can configure OS/browser with a specific encrypted DNS
@@ -327,9 +330,6 @@ Internet-Draft      Network policy to use DNS server         August 2021
       install MDM on their devices, IT admins do not get visibility into
       the security posture of those devices.  To overcome this problem,
       a host agent can cryptographically attest the security status
-      associated with device, such as minimum pass code length,
-      biometric login enabled, OS version etc.  This approach is fast
-      gaining traction especially with the advent of closed OS like
 
 
 
@@ -338,6 +338,9 @@ Reddy, et al.             Expires March 3, 2022                 [Page 6]
 Internet-Draft      Network policy to use DNS server         August 2021
 
 
+      associated with device, such as minimum pass code length,
+      biometric login enabled, OS version etc.  This approach is fast
+      gaining traction especially with the advent of closed OS like
       Windows 10 in S mode [win10s] or Chromebook [Chromebook], where
       applications are sandboxed (e.g., ransomware attack is not
       possible) and applications can only be installed via the OS store.
@@ -381,9 +384,6 @@ Internet-Draft      Network policy to use DNS server         August 2021
    Paul Vixie, Ben Schwartz, and Vinny Parla for the discussion and
    comments.
 
-9.  References
-
-
 
 
 
@@ -393,6 +393,8 @@ Reddy, et al.             Expires March 3, 2022                 [Page 7]
 
 Internet-Draft      Network policy to use DNS server         August 2021
 
+
+9.  References
 
 9.1.  Normative References
 
@@ -439,8 +441,6 @@ Internet-Draft      Network policy to use DNS server         August 2021
               The Unicode Consortium, "Dragonblood: Analyzing the
               Dragonfly Handshake of WPA3 and EAP-pwd",
               <https://papers.mathyvanhoef.com/dragonblood.pdf>.
-
-
 
 
 

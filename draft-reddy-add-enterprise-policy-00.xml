@@ -172,18 +172,14 @@
           as internal attacks are possible within Enterprise networks. For
           example, an internal attacker can modify the DNS responses to
           re-direct a client to malicious servers or pervasively monitor the
-          DNS traffic. The reader may refer to Section 3.2.1 of <xref
-          target="I-D.arkko-farrell-arch-model-t"></xref> for a discussion on
-          the need for more awareness about attacks from within closed
-          domains.</t>
+          DNS traffic. </t>
         </list></t>
 
       <t>This document specifies a mechanism for network to indicate to the
       clients whether they are required to query the network-designated DNS
       servers. DNS clients can discover and authenticate DNS servers provided
-      by the network, for example using the techniques proposed in <xref
-      target="I-D.ietf-add-dnr"></xref> and <xref
-      target="I-D.ietf-add-ddr"></xref>.</t>
+      by the network, for example using the techniques proposed in
+      [I-D.ietf-add-dnr] and [I-D.ietf-add-ddr]. </t>
 
       <t>Provisioning Domains (PvDs) are defined in <xref
       target="RFC7556"></xref> as sets of network configuration information
@@ -248,8 +244,9 @@
       cannot be returned to the client to provide additional information about
       the cause for the block. Further, the ErrorNetworkDNSOnly key is useful
       when the network security service fails to block access to the DNS
-      server and but sucessfully filters traffic from the endpoint to IP
-      addresses not conveyed to the endpoint as part of DNS resolution. </t>
+      server not provided by the network but sucessfully filters traffic from
+      the endpoint to IP addresses not conveyed to the endpoint as part of DNS
+      resolution. </t>
 
       <t>The NetworkDNSOnly set to True is an internal security policy
       expression by the operator of the network but is not a policy
@@ -422,14 +419,6 @@
       <?rfc include='reference.RFC.8914'?>
 
       <?rfc include='reference.RFC.8738'?>
-
-      <?rfc include='reference.I-D.ietf-dprive-phase2-requirements'?>
-
-      <?rfc include='reference.I-D.ietf-add-dnr'?>
-
-      <?rfc include='reference.I-D.ietf-add-ddr'?>
-
-      <?rfc include='reference.I-D.arkko-farrell-arch-model-t'?>
 
       <!-- not yet in XML library           <?rfc include='reference.I-D.ietf-add-ddr'?> 
            <?rfc include='reference.I-D.ietf-add-dnr'?> -->
