@@ -5,10 +5,10 @@
 ADD                                                             T. Reddy
 Internet-Draft                                                    Akamai
 Intended status: Standards Track                                 D. Wing
-Expires: March 3, 2022                                            Citrix
+Expires: March 15, 2022                                           Citrix
                                                                 K. Smith
                                                                 Vodafone
-                                                         August 30, 2021
+                                                      September 11, 2021
 
 
           Network policy to use network-designated DNS server
@@ -34,7 +34,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on March 3, 2022.
+   This Internet-Draft will expire on March 15, 2022.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Reddy, et al.             Expires March 3, 2022                 [Page 1]
+Reddy, et al.            Expires March 15, 2022                 [Page 1]
 
-Internet-Draft      Network policy to use DNS server         August 2021
+Internet-Draft      Network policy to use DNS server      September 2021
 
 
 Table of Contents
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Reddy, et al.             Expires March 3, 2022                 [Page 2]
+Reddy, et al.            Expires March 15, 2022                 [Page 2]
 
-Internet-Draft      Network policy to use DNS server         August 2021
+Internet-Draft      Network policy to use DNS server      September 2021
 
 
    These policies may be necessary to protect employees, customers, or
@@ -156,7 +156,7 @@ Internet-Draft      Network policy to use DNS server         August 2021
    clients whether they are required to query the network-designated DNS
    servers.  DNS clients can discover and authenticate DNS servers
    provided by the network, for example using the techniques proposed in
-   [I-D.ietf-add-dnr] and [I-D.ietf-add-ddr].
+   in [I-D.ietf-add-dnr] and [I-D.ietf-add-ddr].
 
    Provisioning Domains (PvDs) are defined in [RFC7556] as sets of
    network configuration information that clients can use to access
@@ -165,9 +165,9 @@ Internet-Draft      Network policy to use DNS server         August 2021
 
 
 
-Reddy, et al.             Expires March 3, 2022                 [Page 3]
+Reddy, et al.            Expires March 15, 2022                 [Page 3]
 
-Internet-Draft      Network policy to use DNS server         August 2021
+Internet-Draft      Network policy to use DNS server      September 2021
 
 
    on a single network and their Additional Information by means of an
@@ -221,9 +221,9 @@ Internet-Draft      Network policy to use DNS server         August 2021
 
 
 
-Reddy, et al.             Expires March 3, 2022                 [Page 4]
+Reddy, et al.            Expires March 15, 2022                 [Page 4]
 
-Internet-Draft      Network policy to use DNS server         August 2021
+Internet-Draft      Network policy to use DNS server      September 2021
 
 
    example, the client can be pre-configured with both the domain name
@@ -237,7 +237,7 @@ Internet-Draft      Network policy to use DNS server         August 2021
    network security service fails to block access to the DNS server not
    provided by the network but sucessfully filters traffic from the
    endpoint to IP addresses not conveyed to the endpoint as part of DNS
-   resolution.
+   resolution by the network-designated DNS server.
 
    The NetworkDNSOnly set to True is an internal security policy
    expression by the operator of the network but is not a policy
@@ -277,9 +277,9 @@ Internet-Draft      Network policy to use DNS server         August 2021
 
 
 
-Reddy, et al.             Expires March 3, 2022                 [Page 5]
+Reddy, et al.            Expires March 15, 2022                 [Page 5]
 
-Internet-Draft      Network policy to use DNS server         August 2021
+Internet-Draft      Network policy to use DNS server      September 2021
 
 
    discussed in [Firefox-Policy] for Windows and MacOS, and setting
@@ -333,9 +333,9 @@ Internet-Draft      Network policy to use DNS server         August 2021
 
 
 
-Reddy, et al.             Expires March 3, 2022                 [Page 6]
+Reddy, et al.            Expires March 15, 2022                 [Page 6]
 
-Internet-Draft      Network policy to use DNS server         August 2021
+Internet-Draft      Network policy to use DNS server      September 2021
 
 
       associated with device, such as minimum pass code length,
@@ -350,12 +350,13 @@ Internet-Draft      Network policy to use DNS server         August 2021
    The following example shows how the JSON keys defined in this
    document can be used:
 
-      {
-        "identifier": "cafe.example.com.",
-        "expires": "2020-05-23T06:00:00Z",
-        "prefixes": ["2001:db8:1::/48", "2001:db8:4::/48"],
-        "NetworkDNSOnly": True,
-      }
+   {
+     "identifier": "cafe.example.com.",
+     "expires": "2020-05-23T06:00:00Z",
+     "prefixes": ["2001:db8:1::/48", "2001:db8:4::/48"],
+     "NetworkDNSOnly": True,
+     "ErrorNetworkDNSOnly": "example.com Filtering Service to block malware."
+   }
 
    The JSON keys "identifier", "expires", and "prefixes" are defined in
    [RFC8801].
@@ -388,10 +389,9 @@ Internet-Draft      Network policy to use DNS server         August 2021
 
 
 
-
-Reddy, et al.             Expires March 3, 2022                 [Page 7]
+Reddy, et al.            Expires March 15, 2022                 [Page 7]
 
-Internet-Draft      Network policy to use DNS server         August 2021
+Internet-Draft      Network policy to use DNS server      September 2021
 
 
 9.  References
@@ -445,9 +445,9 @@ Internet-Draft      Network policy to use DNS server         August 2021
 
 
 
-Reddy, et al.             Expires March 3, 2022                 [Page 8]
+Reddy, et al.            Expires March 15, 2022                 [Page 8]
 
-Internet-Draft      Network policy to use DNS server         August 2021
+Internet-Draft      Network policy to use DNS server      September 2021
 
 
    [Evil-Twin]
@@ -459,6 +459,17 @@ Internet-Draft      Network policy to use DNS server         August 2021
               "Policy templates for Firefox",
               <https://github.com/mozilla/policy-templates/blob/master/
               README.md#dnsoverhttps>.
+
+   [I-D.ietf-add-ddr]
+              Pauly, T., Kinnear, E., Wood, C. A., McManus, P., and T.
+              Jensen, "Discovery of Designated Resolvers", draft-ietf-
+              add-ddr-02 (work in progress), July 2021.
+
+   [I-D.ietf-add-dnr]
+              Boucadair, M., Reddy, T., Wing, D., Cook, N., and T.
+              Jensen, "DHCP and Router Advertisement Options for the
+              Discovery of Network-designated Resolvers (DNR)", draft-
+              ietf-add-dnr-02 (work in progress), May 2021.
 
    [Krack]    The Unicode Consortium, "Key Reinstallation Attacks",
               2017, <https://www.krackattacks.com/>.
@@ -487,6 +498,14 @@ Internet-Draft      Network policy to use DNS server         August 2021
               Architecture", RFC 7556, DOI 10.17487/RFC7556, June 2015,
               <https://www.rfc-editor.org/info/rfc7556>.
 
+
+
+
+Reddy, et al.            Expires March 15, 2022                 [Page 9]
+
+Internet-Draft      Network policy to use DNS server      September 2021
+
+
    [RFC7626]  Bortzmeyer, S., "DNS Privacy Considerations", RFC 7626,
               DOI 10.17487/RFC7626, August 2015,
               <https://www.rfc-editor.org/info/rfc7626>.
@@ -494,17 +513,6 @@ Internet-Draft      Network policy to use DNS server         August 2021
    [RFC8146]  Harkins, D., "Adding Support for Salted Password Databases
               to EAP-pwd", RFC 8146, DOI 10.17487/RFC8146, April 2017,
               <https://www.rfc-editor.org/info/rfc8146>.
-
-
-
-
-
-
-
-Reddy, et al.             Expires March 3, 2022                 [Page 9]
-
-Internet-Draft      Network policy to use DNS server         August 2021
-
 
    [RFC8310]  Dickinson, S., Gillmor, D., and T. Reddy, "Usage Profiles
               for DNS over TLS and DNS over DTLS", RFC 8310,
@@ -549,17 +557,9 @@ Authors' Addresses
 
 
 
-
-
-
-
-
-
-
-
-Reddy, et al.             Expires March 3, 2022                [Page 10]
+Reddy, et al.            Expires March 15, 2022                [Page 10]
 
-Internet-Draft      Network policy to use DNS server         August 2021
+Internet-Draft      Network policy to use DNS server      September 2021
 
 
    Kevin Smith
@@ -613,4 +613,4 @@ Internet-Draft      Network policy to use DNS server         August 2021
 
 
 
-Reddy, et al.             Expires March 3, 2022                [Page 11]
+Reddy, et al.            Expires March 15, 2022                [Page 11]

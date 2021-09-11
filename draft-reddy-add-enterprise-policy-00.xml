@@ -172,14 +172,15 @@
           as internal attacks are possible within Enterprise networks. For
           example, an internal attacker can modify the DNS responses to
           re-direct a client to malicious servers or pervasively monitor the
-          DNS traffic. </t>
+          DNS traffic.</t>
         </list></t>
 
       <t>This document specifies a mechanism for network to indicate to the
       clients whether they are required to query the network-designated DNS
       servers. DNS clients can discover and authenticate DNS servers provided
-      by the network, for example using the techniques proposed in
-      [I-D.ietf-add-dnr] and [I-D.ietf-add-ddr]. </t>
+      by the network, for example using the techniques proposed in in <xref
+      target="I-D.ietf-add-dnr"></xref> and <xref
+      target="I-D.ietf-add-ddr"></xref>. </t>
 
       <t>Provisioning Domains (PvDs) are defined in <xref
       target="RFC7556"></xref> as sets of network configuration information
@@ -246,7 +247,7 @@
       when the network security service fails to block access to the DNS
       server not provided by the network but sucessfully filters traffic from
       the endpoint to IP addresses not conveyed to the endpoint as part of DNS
-      resolution. </t>
+      resolution by the network-designated DNS server.</t>
 
       <t>The NetworkDNSOnly set to True is an internal security policy
       expression by the operator of the network but is not a policy
@@ -354,6 +355,7 @@
      "expires": "2020-05-23T06:00:00Z",
      "prefixes": ["2001:db8:1::/48", "2001:db8:4::/48"],
      "NetworkDNSOnly": True, 
+     "ErrorNetworkDNSOnly": "example.com Filtering Service to block malware."
    }]]></artwork>
         </figure></t>
 
@@ -419,6 +421,10 @@
       <?rfc include='reference.RFC.8914'?>
 
       <?rfc include='reference.RFC.8738'?>
+
+      <?rfc include='reference.I-D.ietf-add-dnr'?>
+
+      <?rfc include='reference.I-D.ietf-add-ddr'?>
 
       <!-- not yet in XML library           <?rfc include='reference.I-D.ietf-add-ddr'?> 
            <?rfc include='reference.I-D.ietf-add-dnr'?> -->
