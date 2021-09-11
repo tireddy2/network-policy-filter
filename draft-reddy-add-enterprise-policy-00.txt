@@ -11,13 +11,13 @@ Expires: March 15, 2022                                           Citrix
                                                       September 11, 2021
 
 
-          Network policy to use network-designated DNS server
+           Network policy to use Network-designated Resolvers
                   draft-reddy-add-enterprise-policy-00
 
 Abstract
 
    This document specifies a mechanism to inform endpoints about the
-   network policy to use the network-designated DNS server.
+   network policy to use the network-designated resolvers.
 
 Status of This Memo
 
@@ -55,7 +55,7 @@ Copyright Notice
 
 Reddy, et al.            Expires March 15, 2022                 [Page 1]
 
-Internet-Draft      Network policy to use DNS server      September 2021
+Internet-Draft       Network policy to use Resolvers      September 2021
 
 
 Table of Contents
@@ -111,7 +111,7 @@ Table of Contents
 
 Reddy, et al.            Expires March 15, 2022                 [Page 2]
 
-Internet-Draft      Network policy to use DNS server      September 2021
+Internet-Draft       Network policy to use Resolvers      September 2021
 
 
    These policies may be necessary to protect employees, customers, or
@@ -167,7 +167,7 @@ Internet-Draft      Network policy to use DNS server      September 2021
 
 Reddy, et al.            Expires March 15, 2022                 [Page 3]
 
-Internet-Draft      Network policy to use DNS server      September 2021
+Internet-Draft       Network policy to use Resolvers      September 2021
 
 
    on a single network and their Additional Information by means of an
@@ -223,7 +223,7 @@ Internet-Draft      Network policy to use DNS server      September 2021
 
 Reddy, et al.            Expires March 15, 2022                 [Page 4]
 
-Internet-Draft      Network policy to use DNS server      September 2021
+Internet-Draft       Network policy to use Resolvers      September 2021
 
 
    example, the client can be pre-configured with both the domain name
@@ -279,7 +279,7 @@ Internet-Draft      Network policy to use DNS server      September 2021
 
 Reddy, et al.            Expires March 15, 2022                 [Page 5]
 
-Internet-Draft      Network policy to use DNS server      September 2021
+Internet-Draft       Network policy to use Resolvers      September 2021
 
 
    discussed in [Firefox-Policy] for Windows and MacOS, and setting
@@ -335,7 +335,7 @@ Internet-Draft      Network policy to use DNS server      September 2021
 
 Reddy, et al.            Expires March 15, 2022                 [Page 6]
 
-Internet-Draft      Network policy to use DNS server      September 2021
+Internet-Draft       Network policy to use Resolvers      September 2021
 
 
       associated with device, such as minimum pass code length,
@@ -391,7 +391,7 @@ Internet-Draft      Network policy to use DNS server      September 2021
 
 Reddy, et al.            Expires March 15, 2022                 [Page 7]
 
-Internet-Draft      Network policy to use DNS server      September 2021
+Internet-Draft       Network policy to use Resolvers      September 2021
 
 
 9.  References
@@ -447,7 +447,7 @@ Internet-Draft      Network policy to use DNS server      September 2021
 
 Reddy, et al.            Expires March 15, 2022                 [Page 8]
 
-Internet-Draft      Network policy to use DNS server      September 2021
+Internet-Draft       Network policy to use Resolvers      September 2021
 
 
    [Evil-Twin]
@@ -503,7 +503,7 @@ Internet-Draft      Network policy to use DNS server      September 2021
 
 Reddy, et al.            Expires March 15, 2022                 [Page 9]
 
-Internet-Draft      Network policy to use DNS server      September 2021
+Internet-Draft       Network policy to use Resolvers      September 2021
 
 
    [RFC7626]  Bortzmeyer, S., "DNS Privacy Considerations", RFC 7626,
@@ -559,7 +559,7 @@ Authors' Addresses
 
 Reddy, et al.            Expires March 15, 2022                [Page 10]
 
-Internet-Draft      Network policy to use DNS server      September 2021
+Internet-Draft       Network policy to use Resolvers      September 2021
 
 
    Kevin Smith

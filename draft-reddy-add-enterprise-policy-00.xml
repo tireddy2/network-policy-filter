@@ -34,8 +34,8 @@
 <rfc category="std" docName="draft-reddy-add-enterprise-policy-00"
      ipr="trust200902">
   <front>
-    <title abbrev="Network policy to use DNS server">Network policy to use
-    network-designated DNS server</title>
+    <title abbrev="Network policy to use Resolvers">Network policy to use
+    Network-designated Resolvers</title>
 
     <author fullname="Tirumaleswar Reddy" initials="T." surname="Reddy">
       <organization>Akamai</organization>
@@ -99,7 +99,7 @@
 
     <abstract>
       <t>This document specifies a mechanism to inform endpoints about the
-      network policy to use the network-designated DNS server.</t>
+      network policy to use the network-designated resolvers.</t>
     </abstract>
   </front>
 
