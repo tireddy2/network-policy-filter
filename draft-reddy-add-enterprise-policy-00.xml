@@ -177,10 +177,10 @@
 
       <t>This document specifies a mechanism for network to indicate to the
       clients whether they are required to query the network-designated DNS
-      servers. DNS clients can discover and authenticate DNS servers provided
-      by the network, for example using the techniques proposed in in <xref
-      target="I-D.ietf-add-dnr"></xref> and <xref
-      target="I-D.ietf-add-ddr"></xref>. </t>
+      servers. DNS clients can discover and authenticate encrypted DNS servers
+      provided by the network, for example using the techniques proposed in
+      <xref target="I-D.ietf-add-dnr"></xref> and <xref
+      target="I-D.ietf-add-ddr"></xref>.</t>
 
       <t>Provisioning Domains (PvDs) are defined in <xref
       target="RFC7556"></xref> as sets of network configuration information
