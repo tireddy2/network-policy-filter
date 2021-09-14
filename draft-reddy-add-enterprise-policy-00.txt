@@ -5,10 +5,10 @@
 ADD                                                             T. Reddy
 Internet-Draft                                                    Akamai
 Intended status: Standards Track                                 D. Wing
-Expires: March 16, 2022                                           Citrix
+Expires: March 18, 2022                                           Citrix
                                                                 K. Smith
                                                                 Vodafone
-                                                      September 12, 2021
+                                                      September 14, 2021
 
 
            Network policy to use Network-designated Resolvers
@@ -34,7 +34,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on March 16, 2022.
+   This Internet-Draft will expire on March 18, 2022.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Reddy, et al.            Expires March 16, 2022                 [Page 1]
+Reddy, et al.            Expires March 18, 2022                 [Page 1]
 
 Internet-Draft       Network policy to use Resolvers      September 2021
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Reddy, et al.            Expires March 16, 2022                 [Page 2]
+Reddy, et al.            Expires March 18, 2022                 [Page 2]
 
 Internet-Draft       Network policy to use Resolvers      September 2021
 
@@ -152,26 +152,24 @@ Internet-Draft       Network policy to use Resolvers      September 2021
       client to malicious servers or pervasively monitor the DNS
       traffic.
 
-   This document specifies a mechanism for network to indicate to the
-   clients whether they are required to query the network-designated DNS
-   servers.  DNS clients can discover and authenticate encrypted DNS
-   servers provided by the network, for example using the techniques
-   proposed in [I-D.ietf-add-dnr] and [I-D.ietf-add-ddr].
+   This document describes a mechanism for informing endpoints of
+   network policy related to network-signaled DNS servers, such as those
+   DNS servers signaled using [I-D.ietf-add-dnr] and [I-D.ietf-add-ddr].
 
    Provisioning Domains (PvDs) are defined in [RFC7556] as sets of
    network configuration information that clients can use to access
    networks, including rules for DNS resolution and proxy configuration.
    [RFC8801] defines a mechanism for discovering multiple Explicit PvDs
+   on a single network and their Additional Information by means of an
+   HTTP-over-TLS query using a URI derived from the PvD ID.  This set of
 
 
 
-Reddy, et al.            Expires March 16, 2022                 [Page 3]
+Reddy, et al.            Expires March 18, 2022                 [Page 3]
 
 Internet-Draft       Network policy to use Resolvers      September 2021
 
 
-   on a single network and their Additional Information by means of an
-   HTTP-over-TLS query using a URI derived from the PvD ID.  This set of
    additional configuration information is referred to as a Web
    Provisioning Domain (Web PvD).
 
@@ -179,11 +177,12 @@ Internet-Draft       Network policy to use Resolvers      September 2021
 
    The NetworkDNSOnly PvD Key:  which determines if network will block,
       or attempt to block, DNS queries sent to DNS servers that were not
-      signaled by the network.
+      signaled by the network.  This key has the value True or False
+      (case insensitive).
 
    The ErrorNetworkDNSOnly PvD Key:  which contains a human-friendly
-      description of the reason to block access to DNS servers that were
-      not signaled by the network.
+      description of the reason for the NetworkDNSOnly block.  This key
+      is only present if NetworkDNSOnly is True.
 
 2.  Terminology
 
@@ -218,15 +217,15 @@ Internet-Draft       Network policy to use Resolvers      September 2021
    intended for human consumption (not automated parsing).  The
    ErrorNetworkDNSOnly key is useful when the client does not use DNS
    lookup to reach the DNS servers not provided by the network.  For
+   example, the client can be pre-configured with both the domain name
 
 
 
-Reddy, et al.            Expires March 16, 2022                 [Page 4]
+Reddy, et al.            Expires March 18, 2022                 [Page 4]
 
 Internet-Draft       Network policy to use Resolvers      September 2021
 
 
-   example, the client can be pre-configured with both the domain name
    and IP addresses of the DNS server not provided by the network
    (Section 7.1 in [RFC8310]) or the client can be pre-configured with
    the IP address of the resolver, and it uses IP address in the
@@ -273,17 +272,15 @@ Internet-Draft       Network policy to use Resolvers      September 2021
    configuration may be manual or rely upon whatever deployed device
    management tool in an enterprise network.  For example, customizing
    Firefox using Group Policy to use the Enterprise DoH server is
+   discussed in [Firefox-Policy] for Windows and MacOS, and setting
+   Chrome policies is discussed in [Chrome-Policy] and [Chrome-DoH].
 
 
 
-
-Reddy, et al.            Expires March 16, 2022                 [Page 5]
+Reddy, et al.            Expires March 18, 2022                 [Page 5]
 
 Internet-Draft       Network policy to use Resolvers      September 2021
 
-
-   discussed in [Firefox-Policy] for Windows and MacOS, and setting
-   Chrome policies is discussed in [Chrome-Policy] and [Chrome-DoH].
 
    If mobile device management (MDM) (e.g., [MDM-Apple]) secures a
    device, MDM can configure OS/browser with a specific encrypted DNS
@@ -330,17 +327,17 @@ Internet-Draft       Network policy to use Resolvers      September 2021
       install MDM on their devices, IT admins do not get visibility into
       the security posture of those devices.  To overcome this problem,
       a host agent can cryptographically attest the security status
+      associated with device, such as minimum pass code length,
+      biometric login enabled, OS version etc.  This approach is fast
+      gaining traction especially with the advent of closed OS like
 
 
 
-Reddy, et al.            Expires March 16, 2022                 [Page 6]
+Reddy, et al.            Expires March 18, 2022                 [Page 6]
 
 Internet-Draft       Network policy to use Resolvers      September 2021
 
 
-      associated with device, such as minimum pass code length,
-      biometric login enabled, OS version etc.  This approach is fast
-      gaining traction especially with the advent of closed OS like
       Windows 10 in S mode [win10s] or Chromebook [Chromebook], where
       applications are sandboxed (e.g., ransomware attack is not
       possible) and applications can only be installed via the OS store.
@@ -350,13 +347,13 @@ Internet-Draft       Network policy to use Resolvers      September 2021
    The following example shows how the JSON keys defined in this
    document can be used:
 
-   {
-     "identifier": "cafe.example.com.",
-     "expires": "2020-05-23T06:00:00Z",
-     "prefixes": ["2001:db8:1::/48", "2001:db8:4::/48"],
-     "NetworkDNSOnly": True,
-     "ErrorNetworkDNSOnly": "example.com Filtering Service to block malware."
-   }
+      {
+        "identifier": "cafe.example.com.",
+        "expires": "2020-05-23T06:00:00Z",
+        "prefixes": ["2001:db8:1::/48", "2001:db8:4::/48"],
+        "NetworkDNSOnly": True,
+        "ErrorNetworkDNSOnly": "example.com malware blocking service"
+      }
 
    The JSON keys "identifier", "expires", and "prefixes" are defined in
    [RFC8801].
@@ -389,7 +386,10 @@ Internet-Draft       Network policy to use Resolvers      September 2021
 
 
 
-Reddy, et al.            Expires March 16, 2022                 [Page 7]
+
+
+
+Reddy, et al.            Expires March 18, 2022                 [Page 7]
 
 Internet-Draft       Network policy to use Resolvers      September 2021
 
@@ -445,7 +445,7 @@ Internet-Draft       Network policy to use Resolvers      September 2021
 
 
 
-Reddy, et al.            Expires March 16, 2022                 [Page 8]
+Reddy, et al.            Expires March 18, 2022                 [Page 8]
 
 Internet-Draft       Network policy to use Resolvers      September 2021
 
@@ -501,7 +501,7 @@ Internet-Draft       Network policy to use Resolvers      September 2021
 
 
 
-Reddy, et al.            Expires March 16, 2022                 [Page 9]
+Reddy, et al.            Expires March 18, 2022                 [Page 9]
 
 Internet-Draft       Network policy to use Resolvers      September 2021
 
@@ -557,7 +557,7 @@ Authors' Addresses
 
 
 
-Reddy, et al.            Expires March 16, 2022                [Page 10]
+Reddy, et al.            Expires March 18, 2022                [Page 10]
 
 Internet-Draft       Network policy to use Resolvers      September 2021
 
@@ -613,4 +613,4 @@ Internet-Draft       Network policy to use Resolvers      September 2021
 
 
 
-Reddy, et al.            Expires March 16, 2022                [Page 11]
+Reddy, et al.            Expires March 18, 2022                [Page 11]

@@ -175,12 +175,11 @@
           DNS traffic.</t>
         </list></t>
 
-      <t>This document specifies a mechanism for network to indicate to the
-      clients whether they are required to query the network-designated DNS
-      servers. DNS clients can discover and authenticate encrypted DNS servers
-      provided by the network, for example using the techniques proposed in
-      <xref target="I-D.ietf-add-dnr"></xref> and <xref
-      target="I-D.ietf-add-ddr"></xref>.</t>
+	<t>This document describes a mechanism for informing endpoints
+	of network policy related to network-signaled DNS servers,
+	such as those DNS servers signaled using <xref
+	target="I-D.ietf-add-dnr"></xref> and <xref
+	target="I-D.ietf-add-ddr"></xref>.</t>
 
       <t>Provisioning Domains (PvDs) are defined in <xref
       target="RFC7556"></xref> as sets of network configuration information
@@ -195,12 +194,11 @@
       <t>This document defines two PvD Key:<list style="hanging">
           <t hangText="The NetworkDNSOnly PvD Key:">which determines if
           network will block, or attempt to block, DNS queries sent to DNS
-          servers that were not signaled by the network.</t>
+          servers that were not signaled by the network.  This key has the value True or False (case insensitive).</t>
 
           <t hangText="The ErrorNetworkDNSOnly PvD Key:">which contains a
-          human-friendly description of the reason to block access to DNS
-          servers that were not signaled by the network.</t>
-        </list></t>
+          human-friendly description of the reason for the NetworkDNSOnly block.  This key is only present if NetworkDNSOnly is True.</t>
+	  </list></t>
     </section>
 
     <section anchor="notation" title="Terminology">
@@ -355,7 +353,7 @@
      "expires": "2020-05-23T06:00:00Z",
      "prefixes": ["2001:db8:1::/48", "2001:db8:4::/48"],
      "NetworkDNSOnly": True, 
-     "ErrorNetworkDNSOnly": "example.com Filtering Service to block malware."
+     "ErrorNetworkDNSOnly": "example.com malware blocking service"
    }]]></artwork>
         </figure></t>
 
