@@ -103,9 +103,9 @@ Table of Contents
    they achieve the claimed intent.  Nevertheless, network-designated
    DNS servers in place for these purposes act on DNS messages involving
    endpoints connected to the Enterprise network to enforce these
-   policies.  Therefore, if an endpoint uses a public encrypted DNS
-   server, the desired enterprise protection level and enforcement will
-   be bypassed and thus nullified.
+   policies.  Therefore, if an endpoint uses a DNS resolver not signaled
+   by the network, the desired enterprise protection level and
+   enforcement will be bypassed and thus nullified.
 
 
 
