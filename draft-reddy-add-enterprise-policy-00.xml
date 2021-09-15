@@ -35,7 +35,7 @@
      ipr="trust200902">
   <front>
     <title abbrev="Network policy to use Resolvers">Network policy to use
-    Network-designated Resolvers</title>
+    Network-designated DNS Resolvers</title>
 
     <author fullname="Tirumaleswar Reddy" initials="T." surname="Reddy">
       <organization>Akamai</organization>
@@ -98,8 +98,9 @@
     <workgroup>ADD</workgroup>
 
     <abstract>
-      <t>This document specifies a mechanism to inform endpoints about the
-      network policy to use the network-designated resolvers.</t>
+      <t>This document specifies a mechanism to inform endpoints about any
+      network policy mandating the use of network-designated DNS
+      resolvers.</t>
     </abstract>
   </front>
 
@@ -121,31 +122,21 @@
       and the endpoint is unable to identify the reason why the public DNS
       server is not reachable.</t>
 
-      <t><xref target="RFC7626"></xref> discusses DNS privacy considerations
-      in both "on the wire" (Section 2.4 of <xref target="RFC7626"></xref>)
-      and "in the server" (Section 2.5 of <xref target="RFC7626"></xref>)
-      contexts. Also, there has been an increase in the availability of
-      "public resolvers" <xref target="RFC8499"></xref> which DNS clients may
-      be pre-configured to use instead of the default network resolver for a
-      variety of reasons (e.g., offer a good reachability, support an
-      encrypted transport, provide a claimed privacy policy, (lack of)
-      filtering).</t>
-
-      <t>If public encrypted DNS servers (e.g., DNS-over-TLS (DoT) <xref
-      target="RFC7858"></xref> or DNS-over-HTTPS (DoH) <xref
-      target="RFC8484"></xref>) are used instead of using local DNS servers,
-      it can adversely impact Enterprise network-based security features.
-      Indeed, various network security services are provided by Enterprise
-      networks to protect endpoints (e.g., laptops, printers, IoT devices) and
-      to enforce enterprise-specific policies. These policies may be necessary
-      to protect employees, customers, or enterprise network. It is out of the
-      scope of this memo to characterize such policies nor assess that they
-      achieve the claimed intent. Nevertheless, network-provided DNS servers
-      in place for these purposes act on DNS messages involving endpoints
-      connected to the Enterprise network to enforce these policies.
-      Therefore, if an endpoint uses a public encrypted DNS server, the
-      desired enterprise protection level and enforcement will be bypassed and
-      thus nullified.</t>
+      <t>If DNS resolvers not signaled by the network (e.g., DNS-over-TLS
+      (DoT) <xref target="RFC7858"></xref> or DNS-over-HTTPS (DoH) <xref
+      target="RFC8484"></xref>) are used instead of using network-designated
+      DNS servers, it can adversely impact Enterprise network-based security
+      features. Indeed, various network security services are provided by
+      Enterprise networks to protect endpoints (e.g., laptops, printers, IoT
+      devices) and to enforce enterprise-specific policies. These policies may
+      be necessary to protect employees, customers, or enterprise network. It
+      is out of the scope of this memo to characterize such policies nor
+      assess that they achieve the claimed intent. Nevertheless,
+      network-designated DNS servers in place for these purposes act on DNS
+      messages involving endpoints connected to the Enterprise network to
+      enforce these policies. Therefore, if an endpoint uses a public
+      encrypted DNS server, the desired enterprise protection level and
+      enforcement will be bypassed and thus nullified.</t>
 
       <t>In order to act on DNS messages involving endpoints connected to an
       Enterprise network, network security services can be configured to block
@@ -156,9 +147,14 @@
       dropping outgoing packets to these domains. However, DoH traffic can not
       be fully identified without acting as a TLS proxy.</t>
 
-      <t>If a network security service blocks access to a public encrypted DNS
-      server, there are incompatibilities with the privacy profiles discussed
-      in <xref target="RFC8310"></xref>: <list style="symbols">
+      <t>With the advent of DoT and DoH, the network is unable to express any
+      such policy to the endpoints, and if the network is blocking alternative
+      resolvers, endpoints are unable to identify the reason why their choice
+      of public DNS resolver is not reachable. This results in
+      incompatibilities with the privacy profiles discussed in <xref
+      target="RFC8310"></xref>:</t>
+
+      <t><list style="symbols">
           <t>If an endpoint has enabled strict privacy profile (Section 5 of
           <xref target="RFC8310"></xref>), the endpoint cannot resolve DNS
           names.</t>
@@ -166,7 +162,7 @@
           <t>If an endpoint has enabled opportunistic privacy profile (Section
           5 of <xref target="RFC8310"></xref>), the endpoint will either
           fallback to an encrypted connection without authenticating the DNS
-          server provided by the local network or fallback to clear text DNS,
+          server signaled by the local network or fallback to clear text DNS,
           and cannot exchange encrypted DNS messages. <vspace
           blankLines="1" />The fallback adversely impacts security and privacy
           as internal attacks are possible within Enterprise networks. For
@@ -175,32 +171,10 @@
           DNS traffic.</t>
         </list></t>
 
-      <t>This document specifies a mechanism for network to indicate to the
-      clients whether they are required to query the network-designated DNS
-      servers. DNS clients can discover and authenticate encrypted DNS servers
-      provided by the network, for example using the techniques proposed in
-      <xref target="I-D.ietf-add-dnr"></xref> and <xref
-      target="I-D.ietf-add-ddr"></xref>.</t>
-
-      <t>Provisioning Domains (PvDs) are defined in <xref
-      target="RFC7556"></xref> as sets of network configuration information
-      that clients can use to access networks, including rules for DNS
-      resolution and proxy configuration. <xref target="RFC8801"></xref>
-      defines a mechanism for discovering multiple Explicit PvDs on a single
-      network and their Additional Information by means of an HTTP-over-TLS
-      query using a URI derived from the PvD ID. This set of additional
-      configuration information is referred to as a Web Provisioning Domain
-      (Web PvD).</t>
-
-      <t>This document defines two PvD Key:<list style="hanging">
-          <t hangText="The NetworkDNSOnly PvD Key:">which determines if
-          network will block, or attempt to block, DNS queries sent to DNS
-          servers that were not signaled by the network.</t>
-
-          <t hangText="The ErrorNetworkDNSOnly PvD Key:">which contains a
-          human-friendly description of the reason to block access to DNS
-          servers that were not signaled by the network.</t>
-        </list></t>
+      <t>This document describes a mechanism for informing endpoints of
+      network policy related to network-designated DNS servers, such as those
+      DNS servers signaled using <xref target="I-D.ietf-add-dnr"></xref> and
+      <xref target="I-D.ietf-add-ddr"></xref>.</t>
     </section>
 
     <section anchor="notation" title="Terminology">
@@ -226,6 +200,27 @@
 
     <section anchor="SplitDNSAllowed"
              title="PvD NetworkDNSOnly and ErrorNetworkDNSOnly Keys">
+      <t>Provisioning Domains (PvDs) are defined in <xref
+      target="RFC7556"></xref> as sets of network configuration information
+      that clients can use to access networks, including rules for DNS
+      resolution and proxy configuration. <xref target="RFC8801"></xref>
+      defines a mechanism for discovering multiple Explicit PvDs on a single
+      network and their Additional Information by means of an HTTP-over-TLS
+      query using a URI derived from the PvD ID. This set of additional
+      configuration information is referred to as a Web Provisioning Domain
+      (Web PvD).</t>
+
+      <t>This document defines two PvD Key:<list style="hanging">
+          <t hangText="The NetworkDNSOnly PvD Key:">which determines if
+          network will block, or attempt to block, DNS queries sent to DNS
+          servers that were not signaled by the network. This key has the
+          value True or False (case insensitive).</t>
+
+          <t hangText="The ErrorNetworkDNSOnly PvD Key:">which contains a
+          human-friendly description of the reason for the NetworkDNSOnly
+          block. This key is only present if NetworkDNSOnly is True.</t>
+        </list></t>
+
       <t>Some enterprise networks require clients to query the
       network-designated DNS servers, it sets the PvD NetworkDNSOnly key to
       True, otherwise sets NetworkDNSOnly to False. If NetworkDNSOnly is set
@@ -234,20 +229,21 @@
       NetworkDNSOnly is True, the ErrorNetworkDNSOnly key MUST contain a
       human-friendly description for this block. This information is intended
       for human consumption (not automated parsing). The ErrorNetworkDNSOnly
-      key is useful when the client does not use DNS lookup to reach the DNS
-      servers not provided by the network. For example, the client can be
-      pre-configured with both the domain name and IP addresses of the DNS
-      server not provided by the network (Section 7.1 in <xref
-      target="RFC8310"></xref>) or the client can be pre-configured with the
-      IP address of the resolver, and it uses IP address in the certificate as
-      identifier (see <xref target="RFC8738"></xref>). In this case, the
-      extended error code "Blocked" defined in <xref target="RFC8914"></xref>
-      cannot be returned to the client to provide additional information about
-      the cause for the block. Further, the ErrorNetworkDNSOnly key is useful
-      when the network security service fails to block access to the DNS
-      server not provided by the network but sucessfully filters traffic from
-      the endpoint to IP addresses not conveyed to the endpoint as part of DNS
-      resolution by the network-designated DNS server.</t>
+      key is useful when the client does not use DNS resolution by the
+      network-designated DNS server to reach the DNS servers not signaled by
+      the network. For example, the client can be pre-configured with both the
+      domain name and IP addresses of the DNS server not signaled by the
+      network (Section 7.1 in <xref target="RFC8310"></xref>) or the client
+      can be pre-configured with the IP address of the resolver, and it uses
+      IP address in the certificate as identifier (see <xref
+      target="RFC8738"></xref>). In this case, the extended error code
+      "Blocked" defined in <xref target="RFC8914"></xref> cannot be returned
+      to the client to provide additional information about the cause for the
+      block. Further, the ErrorNetworkDNSOnly key is useful when the network
+      security service fails to block access to the DNS server not signaled by
+      the network but successfully filters traffic from the endpoint to IP
+      addresses not conveyed to the endpoint as part of DNS resolution by the
+      network-designated DNS server.</t>
 
       <t>The NetworkDNSOnly set to True is an internal security policy
       expression by the operator of the network but is not a policy
@@ -355,7 +351,7 @@
      "expires": "2020-05-23T06:00:00Z",
      "prefixes": ["2001:db8:1::/48", "2001:db8:4::/48"],
      "NetworkDNSOnly": True, 
-     "ErrorNetworkDNSOnly": "example.com Filtering Service to block malware."
+     "ErrorNetworkDNSOnly": "example.com malware blocking service"
    }]]></artwork>
         </figure></t>
 

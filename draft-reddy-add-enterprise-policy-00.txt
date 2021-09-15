@@ -5,13 +5,13 @@
 ADD                                                             T. Reddy
 Internet-Draft                                                    Akamai
 Intended status: Standards Track                                 D. Wing
-Expires: March 16, 2022                                           Citrix
+Expires: March 19, 2022                                           Citrix
                                                                 K. Smith
                                                                 Vodafone
-                                                      September 12, 2021
+                                                      September 15, 2021
 
 
-           Network policy to use Network-designated DNS Resolvers
+         Network policy to use Network-designated DNS Resolvers
                   draft-reddy-add-enterprise-policy-00
 
 Abstract
@@ -34,7 +34,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on March 16, 2022.
+   This Internet-Draft will expire on March 19, 2022.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Reddy, et al.            Expires March 16, 2022                 [Page 1]
+Reddy, et al.            Expires March 19, 2022                 [Page 1]
 
 Internet-Draft       Network policy to use Resolvers      September 2021
 
@@ -61,30 +61,75 @@ Internet-Draft       Network policy to use Resolvers      September 2021
 Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
-   2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   4
+   2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   3
    3.  PvD NetworkDNSOnly and ErrorNetworkDNSOnly Keys . . . . . . .   4
    4.  Scope of NetworkDNSOnly Key . . . . . . . . . . . . . . . . .   5
    5.  An Example  . . . . . . . . . . . . . . . . . . . . . . . . .   7
    6.  Security Considerations . . . . . . . . . . . . . . . . . . .   7
    7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   7
    8.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   7
-   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   8
-     9.1.  Normative References  . . . . . . . . . . . . . . . . . .   8
+   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   7
+     9.1.  Normative References  . . . . . . . . . . . . . . . . . .   7
      9.2.  Informative References  . . . . . . . . . . . . . . . . .   8
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  10
 
 1.  Introduction
 
-   An enterprise, education or access network may mandate the use of a 
-   network-designated DNS resolver. Such a policy can help the network 
-   apply content and security filters, and ensure access to private 
-   network resources that are not resolvable by non-network DNS resolvers.
-   
-   With the advent of DoT and DoH, the network is unable to express any 
-   such policy to the endpoints, and if the network is blocking alternative 
-   resolvers, endpoints are unable to identify the reason why their choice 
-   of public DNS resolver is not reachable. This results in incompatibilities 
-   with the privacy profiles discussed in [RFC8310]:
+   Historically, an endpoint would utilize network-designated DNS
+   servers upon joining a network (e.g., DHCP OFFER, IPv6 Router
+   Advertisement).  While it has long been possible to configure
+   endpoints to ignore the network's suggestions and use a (public) DNS
+   server on the Internet, this was seldom used because some networks
+   block UDP/53 (in order to enforce their own DNS policies).  Also,
+   there has been an increase in the availability of "public resolvers"
+   [RFC8499] which DNS clients may be pre-configured to use instead of
+   the default network resolver for a variety of reasons (e.g., offer a
+   good reachability, support an encrypted transport, provide a claimed
+   privacy policy, (lack of) filtering).  With the advent of DoT and
+   DoH, such network blocking is more difficult.  The network is unable
+   to express its policy to use network-designated resolvers to the
+   endpoints and the endpoint is unable to identify the reason why the
+   public DNS server is not reachable.
+
+   If DNS resolvers not signaled by the network (e.g., DNS-over-TLS
+   (DoT) [RFC7858] or DNS-over-HTTPS (DoH) [RFC8484]) are used instead
+   of using network-designated DNS servers, it can adversely impact
+   Enterprise network-based security features.  Indeed, various network
+   security services are provided by Enterprise networks to protect
+   endpoints (e.g., laptops, printers, IoT devices) and to enforce
+   enterprise-specific policies.  These policies may be necessary to
+   protect employees, customers, or enterprise network.  It is out of
+   the scope of this memo to characterize such policies nor assess that
+   they achieve the claimed intent.  Nevertheless, network-designated
+   DNS servers in place for these purposes act on DNS messages involving
+   endpoints connected to the Enterprise network to enforce these
+   policies.  Therefore, if an endpoint uses a public encrypted DNS
+   server, the desired enterprise protection level and enforcement will
+   be bypassed and thus nullified.
+
+
+
+Reddy, et al.            Expires March 19, 2022                 [Page 2]
+
+Internet-Draft       Network policy to use Resolvers      September 2021
+
+
+   In order to act on DNS messages involving endpoints connected to an
+   Enterprise network, network security services can be configured to
+   block DoT traffic by dropping outgoing packets to destination port
+   number 853.  Identifying DoH traffic is far more challenging than
+   identifying DoT traffic.  Network security services may try to
+   identify the well-known DoH resolvers by their domain name and DoH
+   traffic can be blocked by dropping outgoing packets to these domains.
+   However, DoH traffic can not be fully identified without acting as a
+   TLS proxy.
+
+   With the advent of DoT and DoH, the network is unable to express any
+   such policy to the endpoints, and if the network is blocking
+   alternative resolvers, endpoints are unable to identify the reason
+   why their choice of public DNS resolver is not reachable.  This
+   results in incompatibilities with the privacy profiles discussed in
+   [RFC8310]:
 
    o  If an endpoint has enabled strict privacy profile (Section 5 of
       [RFC8310]), the endpoint cannot resolve DNS names.
@@ -92,7 +137,7 @@ Table of Contents
    o  If an endpoint has enabled opportunistic privacy profile
       (Section 5 of [RFC8310]), the endpoint will either fallback to an
       encrypted connection without authenticating the DNS server
-      provided by the local network or fallback to clear text DNS, and
+      signaled by the local network or fallback to clear text DNS, and
       cannot exchange encrypted DNS messages.
 
       The fallback adversely impacts security and privacy as internal
@@ -100,24 +145,11 @@ Table of Contents
       internal attacker can modify the DNS responses to re-direct a
       client to malicious servers or pervasively monitor the DNS
       traffic.
-   
-   This document specifies a mechanism for network to indicate to the
-   clients whether they are required to use the network-designated DNS
-   reolvers as a condition of network entry.  DNS clients can discover 
-   and authenticate encrypted DNS servers provided by the network, 
-   for example using the techniques proposed in [I-D.ietf-add-dnr] 
-   and [I-D.ietf-add-ddr].
-   
-   It is out of the scope of this memo to characterize such network policies 
-   nor assess that they achieve the claimed intent.  
 
-
-
-Reddy, et al.            Expires March 16, 2022                 [Page 2]
-
-Internet-Draft       Network policy to use Resolvers      September 2021
-
-
+   This document describes a mechanism for informing endpoints of
+   network policy related to network-designated DNS servers, such as
+   those DNS servers signaled using [I-D.ietf-add-dnr] and
+   [I-D.ietf-add-ddr].
 
 2.  Terminology
 
@@ -129,6 +161,14 @@ Internet-Draft       Network policy to use Resolvers      September 2021
 
    This document makes use of the terms defined in [RFC8499].  The terms
    "Private DNS", "Global DNS" and "Split DNS" are defined in [RFC8499].
+
+
+
+
+Reddy, et al.            Expires March 19, 2022                 [Page 3]
+
+Internet-Draft       Network policy to use Resolvers      September 2021
+
 
    'Encrypted DNS' refers to a DNS protocol that provides an encrypted
    channel between a DNS client and server (e.g., DoT, DoH, or DoQ).
@@ -145,7 +185,7 @@ Internet-Draft       Network policy to use Resolvers      September 2021
    Provisioning Domains (PvDs) are defined in [RFC7556] as sets of
    network configuration information that clients can use to access
    networks, including rules for DNS resolution and proxy configuration.
-   [RFC8801] defines a mechanism for discovering multiple Explicit PvDs 
+   [RFC8801] defines a mechanism for discovering multiple Explicit PvDs
    on a single network and their Additional Information by means of an
    HTTP-over-TLS query using a URI derived from the PvD ID.  This set of
    additional configuration information is referred to as a Web
@@ -155,12 +195,13 @@ Internet-Draft       Network policy to use Resolvers      September 2021
 
    The NetworkDNSOnly PvD Key:  which determines if network will block,
       or attempt to block, DNS queries sent to DNS servers that were not
-      signaled by the network.
+      signaled by the network.  This key has the value True or False
+      (case insensitive).
 
    The ErrorNetworkDNSOnly PvD Key:  which contains a human-friendly
-      description of the reason to block access to DNS servers that were
-      not signaled by the network.
-   
+      description of the reason for the NetworkDNSOnly block.  This key
+      is only present if NetworkDNSOnly is True.
+
    Some enterprise networks require clients to query the network-
    designated DNS servers, it sets the PvD NetworkDNSOnly key to True,
    otherwise sets NetworkDNSOnly to False.  If NetworkDNSOnly is set to
@@ -170,27 +211,28 @@ Internet-Draft       Network policy to use Resolvers      September 2021
    human-friendly description for this block.  This information is
    intended for human consumption (not automated parsing).  The
    ErrorNetworkDNSOnly key is useful when the client does not use DNS
-   lookup to reach the DNS servers not provided by the network.  For
+   resolution by the network-designated DNS server to reach the DNS
+   servers not signaled by the network.  For example, the client can be
+   pre-configured with both the domain name and IP addresses of the DNS
+   server not signaled by the network (Section 7.1 in [RFC8310]) or the
+   client can be pre-configured with the IP address of the resolver, and
+   it uses IP address in the certificate as identifier (see [RFC8738]).
+   In this case, the extended error code "Blocked" defined in [RFC8914]
 
 
 
-Reddy, et al.            Expires March 16, 2022                 [Page 3]
+Reddy, et al.            Expires March 19, 2022                 [Page 4]
 
 Internet-Draft       Network policy to use Resolvers      September 2021
 
 
-   example, the client can be pre-configured with both the domain name
-   and IP addresses of the DNS server not provided by the network
-   (Section 7.1 in [RFC8310]) or the client can be pre-configured with
-   the IP address of the resolver, and it uses IP address in the
-   certificate as identifier (see [RFC8738]).  In this case, the
-   extended error code "Blocked" defined in [RFC8914] cannot be returned
-   to the client to provide additional information about the cause for
-   the block.  Further, the ErrorNetworkDNSOnly key is useful when the
-   network security service fails to block access to the DNS server not
-   provided by the network but sucessfully filters traffic from the
-   endpoint to IP addresses not conveyed to the endpoint as part of DNS
-   resolution by the network-designated DNS server.
+   cannot be returned to the client to provide additional information
+   about the cause for the block.  Further, the ErrorNetworkDNSOnly key
+   is useful when the network security service fails to block access to
+   the DNS server not signaled by the network but successfully filters
+   traffic from the endpoint to IP addresses not conveyed to the
+   endpoint as part of DNS resolution by the network-designated DNS
+   server.
 
    The NetworkDNSOnly set to True is an internal security policy
    expression by the operator of the network but is not a policy
@@ -226,21 +268,20 @@ Internet-Draft       Network policy to use Resolvers      September 2021
    configuration may be manual or rely upon whatever deployed device
    management tool in an enterprise network.  For example, customizing
    Firefox using Group Policy to use the Enterprise DoH server is
-
-
-
-
-Reddy, et al.            Expires March 16, 2022                 [Page 4]
-
-Internet-Draft       Network policy to use Resolvers      September 2021
-
-
    discussed in [Firefox-Policy] for Windows and MacOS, and setting
    Chrome policies is discussed in [Chrome-Policy] and [Chrome-DoH].
 
    If mobile device management (MDM) (e.g., [MDM-Apple]) secures a
    device, MDM can configure OS/browser with a specific encrypted DNS
    server.  If an endpoint is on-boarded, for example, using Over-The-
+
+
+
+Reddy, et al.            Expires March 19, 2022                 [Page 5]
+
+Internet-Draft       Network policy to use Resolvers      September 2021
+
+
    Air (OTA) enrollment [OTA] to provision the device with a certificate
    and configuration profile, the configuration profile can include the
    authentication domain name (ADN) of the encrypted DNS server.  The
@@ -283,14 +324,6 @@ Internet-Draft       Network policy to use Resolvers      September 2021
       install MDM on their devices, IT admins do not get visibility into
       the security posture of those devices.  To overcome this problem,
       a host agent can cryptographically attest the security status
-
-
-
-Reddy, et al.            Expires March 16, 2022                 [Page 5]
-
-Internet-Draft       Network policy to use Resolvers      September 2021
-
-
       associated with device, such as minimum pass code length,
       biometric login enabled, OS version etc.  This approach is fast
       gaining traction especially with the advent of closed OS like
@@ -298,18 +331,25 @@ Internet-Draft       Network policy to use Resolvers      September 2021
       applications are sandboxed (e.g., ransomware attack is not
       possible) and applications can only be installed via the OS store.
 
+
+
+Reddy, et al.            Expires March 19, 2022                 [Page 6]
+
+Internet-Draft       Network policy to use Resolvers      September 2021
+
+
 5.  An Example
 
    The following example shows how the JSON keys defined in this
    document can be used:
 
-   {
-     "identifier": "cafe.example.com.",
-     "expires": "2020-05-23T06:00:00Z",
-     "prefixes": ["2001:db8:1::/48", "2001:db8:4::/48"],
-     "NetworkDNSOnly": True,
-     "ErrorNetworkDNSOnly": "example.com Filtering Service to block malware."
-   }
+      {
+        "identifier": "cafe.example.com.",
+        "expires": "2020-05-23T06:00:00Z",
+        "prefixes": ["2001:db8:1::/48", "2001:db8:4::/48"],
+        "NetworkDNSOnly": True,
+        "ErrorNetworkDNSOnly": "example.com malware blocking service"
+      }
 
    The JSON keys "identifier", "expires", and "prefixes" are defined in
    [RFC8801].
@@ -338,15 +378,6 @@ Internet-Draft       Network policy to use Resolvers      September 2021
    Paul Vixie, Ben Schwartz, and Vinny Parla for the discussion and
    comments.
 
-
-
-
-
-Reddy, et al.            Expires March 16, 2022                 [Page 6]
-
-Internet-Draft       Network policy to use Resolvers      September 2021
-
-
 9.  References
 
 9.1.  Normative References
@@ -355,6 +386,13 @@ Internet-Draft       Network policy to use Resolvers      September 2021
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
+
+
+
+Reddy, et al.            Expires March 19, 2022                 [Page 7]
+
+Internet-Draft       Network policy to use Resolvers      September 2021
+
 
    [RFC7858]  Hu, Z., Zhu, L., Heidemann, J., Mankin, A., Wessels, D.,
               and P. Hoffman, "Specification for DNS over Transport
@@ -395,14 +433,6 @@ Internet-Draft       Network policy to use Resolvers      September 2021
               Dragonfly Handshake of WPA3 and EAP-pwd",
               <https://papers.mathyvanhoef.com/dragonblood.pdf>.
 
-
-
-
-Reddy, et al.            Expires March 16, 2022                 [Page 7]
-
-Internet-Draft       Network policy to use Resolvers      September 2021
-
-
    [Evil-Twin]
               The Unicode Consortium, "Evil twin (wireless networks)",
               <https://en.wikipedia.org/wiki/
@@ -412,6 +442,13 @@ Internet-Draft       Network policy to use Resolvers      September 2021
               "Policy templates for Firefox",
               <https://github.com/mozilla/policy-templates/blob/master/
               README.md#dnsoverhttps>.
+
+
+
+Reddy, et al.            Expires March 19, 2022                 [Page 8]
+
+Internet-Draft       Network policy to use Resolvers      September 2021
+
 
    [I-D.ietf-add-ddr]
               Pauly, T., Kinnear, E., Wood, C. A., McManus, P., and T.
@@ -451,14 +488,6 @@ Internet-Draft       Network policy to use Resolvers      September 2021
               Architecture", RFC 7556, DOI 10.17487/RFC7556, June 2015,
               <https://www.rfc-editor.org/info/rfc7556>.
 
-
-
-
-Reddy, et al.            Expires March 16, 2022                 [Page 8]
-
-Internet-Draft       Network policy to use Resolvers      September 2021
-
-
    [RFC7626]  Bortzmeyer, S., "DNS Privacy Considerations", RFC 7626,
               DOI 10.17487/RFC7626, August 2015,
               <https://www.rfc-editor.org/info/rfc7626>.
@@ -466,6 +495,16 @@ Internet-Draft       Network policy to use Resolvers      September 2021
    [RFC8146]  Harkins, D., "Adding Support for Salted Password Databases
               to EAP-pwd", RFC 8146, DOI 10.17487/RFC8146, April 2017,
               <https://www.rfc-editor.org/info/rfc8146>.
+
+
+
+
+
+
+Reddy, et al.            Expires March 19, 2022                 [Page 9]
+
+Internet-Draft       Network policy to use Resolvers      September 2021
+
 
    [RFC8310]  Dickinson, S., Gillmor, D., and T. Reddy, "Usage Profiles
               for DNS over TLS and DNS over DTLS", RFC 8310,
@@ -510,7 +549,15 @@ Authors' Addresses
 
 
 
-Reddy, et al.            Expires March 16, 2022                [Page 9]
+
+
+
+
+
+
+
+
+Reddy, et al.            Expires March 19, 2022                [Page 10]
 
 Internet-Draft       Network policy to use Resolvers      September 2021
 
@@ -566,4 +613,4 @@ Internet-Draft       Network policy to use Resolvers      September 2021
 
 
 
-Reddy, et al.            Expires March 16, 2022                [Page 11]
+Reddy, et al.            Expires March 19, 2022                [Page 11]
